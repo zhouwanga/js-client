@@ -30,7 +30,7 @@
     };
 
     Panel.prototype.help = function(str) {
-        var html = "<ul><li>输入框在最下方</li><li>聊天信息要以'~'开头</li><li>输入clear清空当前面板</li></ul>"
+        var html = ''
         this.contentDiv.innerHTML += html;
         this.contentDiv.scrollTop = this.contentDiv.scrollHeight;
     };
@@ -50,8 +50,9 @@
                     }else if(val == 'help'){
                         this.help()
                     }else {
-                        resolve(val);
-                        resolve = null;
+                        if(window.is){
+                            window.wsClient.sendMsg(val)
+                        }
                         this.append(prefix + val + '</div>');
                     }
                     this.inputBox.value = "";

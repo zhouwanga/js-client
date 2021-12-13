@@ -14,7 +14,7 @@
         }
         var arr = Server.pattern.exec(s);
         this.host = arr[1];
-        this.port = parseInt(arr[2]) + 1;
+        this.port = parseInt(arr[2]);
         if (arr[3]) this.name = arr[3];
         if (arr[4]) this.version = parseInt(arr[4].replace(/\./g, ""));
     }
@@ -38,7 +38,7 @@
     };
 
     // ---------------------------------------------------------------------------------------------
-    var defaultLoadTimeout = 3000;
+    var defaultLoadTimeout = 1000;
 
     function loadServerList() {
         existingServerListApis.forEach((api, i) => {
@@ -60,10 +60,10 @@
 
     function showServerList() {
         var contentDiv = document.querySelector("#content");
-        existingServerList.forEach((server, i) => {
-            contentDiv.innerHTML += (i + 1) + ". &nbsp;" + server + "</br>";
-        });
-
+        contentDiv.innerHTML += "Nickname: ";
+        // existingServerList.forEach((server, i) => {
+        //     contentDiv.innerHTML += (i + 1) + ". &nbsp;" + server + "</br>";
+        // });
         var input = document.querySelector("#input");
         input.addEventListener("keypress", selectServer, false);
         input.focus();
@@ -76,46 +76,13 @@
 
         var contentEl = document.querySelector("#content");
         var input = document.querySelector("#input");
-        var s = input.value.trim();
+        var s = "49.235.95.125:9998:Nico[v1.0.0]"
+        var server = new Server(s);
+        window.name = input.value;
         input.value = "";
-        if (s == "" || s === null || typeof s === "undefined") {
-            contentEl.innerHTML += "Invalid input, please input again.</br>";
-            return;
-        }
 
-        if (s.length <= Math.ceil(existingServerList.length / 10)) {
-            var server;
-            try {
-                var i = parseInt(s);
-                if (!Number.isNaN(i)) {
-                    if (i > 0 && i <= existingServerList.length) {
-                        try {
-                            server = new Server(existingServerList[i - 1]);
-                            if (server.compareVersion(Server.requiredMinVersion) < 0) {
-                                contentEl.innerHTML += "Server version must >= v1.2.7. please choose another server.</br>";
-                                return;
-                            }
-                        } catch(e) {
-                            contentEl.innerHTML += "Illegal server address. please choose another server.</br>";
-                            return;
-                        }
-                    } else {
-                        contentEl.innerHTML += "Invalid option " + i + ", please input again.</br>";
-                        return;
-                    }
-                }
-            } catch (e) {
-                console.error("Program error, abnormal exit.\n", e);
-                return;
-            }
-        } else {
-            try {
-                server = new Server(s);
-            } catch(e) {
-                contentEl.innerHTML += "Invalid server address : " + s + ", please input again.</br>";
-                return;
-            }
-        }
+        var contentDiv = document.querySelector("#content");
+        contentDiv.innerHTML += name + " </br>";
 
         start(server.host, server.port)
             .then(() => input.removeEventListener("keypress", selectServer, false))
@@ -133,13 +100,12 @@
             port = 1025;
         }
 
-        window.wsClient = new WsClient("ws://" + host + ":" + port + "/ratel");
-        window.imClient = new ImClient("ws://121.5.140.133:3444/im")
-        window.imClient.Connect()
+        window.wsClient = new WsClient("ws://" + host + ":" + port + "/ws");
         window.wsClient.panel.help()
 
-        document.querySelector("#content").innerHTML += "Connect to ws://" + host + ":" + port + "/ratel .</br></br>";
-        return window.wsClient.init();
+        document.querySelector("#content").innerHTML += "Connect to ws://" + host + ":" + port + "/ws .</br></br>";
+        var client = window.wsClient.init();
+        return client;
     }
 
     window.onload = function() {

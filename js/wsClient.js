@@ -66,6 +66,8 @@
 			});
 		});
 
+		this.panel.waitInput()
+
 		return promise;
 	};
 
@@ -77,12 +79,25 @@
 	WsClient.prototype.initWebsocketConnect = function(resolve, reject) {
 		if (window.WebSocket) {
 			this.socket = new WebSocket(this.url);
-
 			this.socket.onmessage = (event) => {
-				this.protocol.decode(event.data).then(v => this.dispatch(v));
+				var msg = JSON.parse(event.data).data;
+				if(msg == 'INTERACTIVE_SIGNAL_START'){
+					window.is = true;						
+				}else if(msg == 'INTERACTIVE_SIGNAL_STOP'){
+					window.is = false;	
+				}else{
+					window.wsClient.panel.append(msg)
+				}
 			};
 			this.socket.onopen = (event) => {
 				log.info("websocket ({}) open", this.url);
+				this.socket.send(JSON.stringify({
+					data: JSON.stringify({
+						ID: new Date().getTime(),
+						Name: window.name,
+						Score: 100
+					})
+				}))
 				resolve();
 			};
 			this.socket.onclose = (e) => {
@@ -93,6 +108,8 @@
 				log.error("Occur a error {}", e);
 				reject(e);
 			};
+
+			
 		} else {
 			log.error("current browser not support websocket");
 		}
@@ -121,6 +138,12 @@
 		};
 		this.protocol.encode(transferData)
 			.then(encodeValue => this.socket.send(encodeValue));
+	};
+
+	WsClient.prototype.sendMsg = function(msg) {
+		this.socket.send(JSON.stringify({
+			data:msg
+		}))
 	};
 
 	WsClient.prototype.close = function() {

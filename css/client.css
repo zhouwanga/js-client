@@ -32,9 +32,15 @@ input:focus  {
     font-size: 15px
 }
 
+#contains{
+    width: 1100px;
+    overflow-y: auto;
+    word-wrap:break-word;
+}
+
 #content {
     width: 1100px;
-    height: calc(100vh - 120px);;
+    max-height: calc(100vh - 100px);;
     overflow-y: auto;
     word-wrap:break-word;
 }
