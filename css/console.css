@@ -1,4 +1,4 @@
-#terminal{background: none;  color: #000; }
+#terminal{background: none;  color: #000; width: 100%; }
 #terminal div {font-family:Consolas; line-height: 1.5em;}
 #terminal input{font-family:Consolas; line-height: 1em;}
 #console .tools{user-select: none; cursor: pointer;
