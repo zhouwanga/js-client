@@ -1,0 +1,51 @@
+/*
+ * @Author: Mr.Zhan YiDong
+ * @Date: 2022-01-25 13:54:52
+ * @Last Modified by: Mr.Zhan YiDong
+ * @Last Modified time: 2022-01-26 09:51:29
+ */
+.tools {
+  display: flex;
+  justify-content: space-between;
+  align-items: center
+}
+
+#console .tools {
+  height: auto;
+}
+
+#console .tools .options.icon_line {
+  padding: 0;
+}
+
+#console .tools .seting {
+  width: 30px;
+  align-self: flex-start;
+}
+
+#console .tools .toolsList {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+#console .tools .options {
+  padding: 0 8px;
+}
+
+#console .tools .options .split {
+  margin-left: 5px;
+}
+
+#terminal,
+#content {
+  width: 100%;
+}
+
+#contains {
+  width: calc(100% - 40px);
+}
+
+.inputBox {
+  display: flex;
+}
