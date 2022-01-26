@@ -40,30 +40,9 @@
     // ---------------------------------------------------------------------------------------------
     var defaultLoadTimeout = 1000;
 
-    function loadServerList() {
-        existingServerListApis.forEach((api, i) => {
-            Utils.timeout(new Promise((resolve, reject) => {
-                fetch(api)
-                .then(response => {
-                    resolve(response.json())
-                })
-                .catch((e) => {
-                    reject(e)
-                });
-            }), defaultLoadTimeout)
-            .then(data => {
-                showServerList(existingServerList = data.length > 0 ? data : existingServerList)
-            })
-            .catch(showServerList);
-        });
-    }
-
-    function showServerList() {
+    function showInput() {
         var contentDiv = document.querySelector("#content");
         contentDiv.innerHTML += "Nickname: ";
-        // existingServerList.forEach((server, i) => {
-        //     contentDiv.innerHTML += (i + 1) + ". &nbsp;" + server + "</br>";
-        // });
         var input = document.querySelector("#input");
         input.addEventListener("keypress", selectServer, false);
         input.focus();
@@ -110,6 +89,6 @@
 
     window.onload = function() {
         defaultSite.render();
-        loadServerList();
+        showInput();
     };
 } (this, this.Utils));

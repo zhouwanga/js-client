@@ -53,7 +53,7 @@
                         if(window.is){
                             window.wsClient.sendMsg(val)
                         }
-                        this.append(prefix + val + '</div>');
+                        // this.append(prefix + val + '</div>');
                     }
                     this.inputBox.value = "";
                 }
