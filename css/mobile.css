@@ -38,7 +38,7 @@
 }
 
 #contains {
-  width: calc(100% - 100px);
+  width: calc(100% - 40px);
   min-height: 1000px;
 }
 
