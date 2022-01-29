@@ -54,15 +54,18 @@
         }
 
         var contentEl = document.querySelector("#content");
+        var contentDiv = document.querySelector("#content");
         var input = document.querySelector("#input");
+        if (! input.value) {
+            contentEl.innerHTML += "</br><font color='red'>Nickname不能为空</font></br>";
+            return showInput()
+        }
         var s = "49.235.95.125:9998:Nico[v1.0.0]"
         var server = new Server(s);
         window.name = input.value;
         input.value = "";
-
-        var contentDiv = document.querySelector("#content");
+        
         contentDiv.innerHTML += name + " </br>";
-
         start(server.host, server.port)
             .then(() => input.removeEventListener("keypress", selectServer, false))
             .catch(e => {
@@ -91,4 +94,11 @@
         defaultSite.render();
         showInput();
     };
+
+    document.onkeydown = function (event) {
+        var e = event || window.event;
+        if (e && e.keyCode == 13) { 
+            document.getElementById("input").focus()
+        }
+    }; 
 } (this, this.Utils));
