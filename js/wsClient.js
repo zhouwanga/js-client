@@ -76,6 +76,17 @@
 		return this.protocol.init();
 	};
 
+	function htmlEscape(text){ 
+		return text.replace(/[<>"&]/g, function(match, pos, originalText){
+		switch(match){
+		case "<": return "&lt;"; 
+		case ">":return "&gt;";
+		case "&":return "&amp;"; 
+		case "\"":return "&quot;"; 
+		} 
+		}); 
+	}
+
 	WsClient.prototype.initWebsocketConnect = function(resolve, reject) {
 		if (window.WebSocket) {
 			this.socket = new WebSocket(this.url);
@@ -86,7 +97,7 @@
 				}else if(msg == 'INTERACTIVE_SIGNAL_STOP'){
 					window.is = false;	
 				}else{
-					window.wsClient.panel.append(msg)
+					window.wsClient.panel.append(htmlEscape(msg))
 				}
 			};
 			this.socket.onopen = (event) => {
