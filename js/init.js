@@ -56,8 +56,13 @@
         var contentEl = document.querySelector("#content");
         var contentDiv = document.querySelector("#content");
         var input = document.querySelector("#input");
+        input.value = input.value.trim()
         if (! input.value) {
             contentEl.innerHTML += "</br><font color='red'>Nickname不能为空</font></br>";
+            return showInput()
+        }
+        if (input.value.length > 10) {
+            contentEl.innerHTML += "</br><font color='red'>Nickname不能超出10个字符</font></br>";
             return showInput()
         }
         var s = "49.235.95.125:9998:Nico[v1.0.0]"
