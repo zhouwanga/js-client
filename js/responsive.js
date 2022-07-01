@@ -39,5 +39,10 @@
     const theResizeObserver = new ResizeObserver(lazyLayout);
     const theElement = document.querySelector('#content')
     theResizeObserver.observe(theElement);
+    //解绑
+    window.onbeforeunload = function () {
+        theResizeObserver.unobserve(theElement);
+        theResizeObserver = null;
+    };
     core()
 }(this));
