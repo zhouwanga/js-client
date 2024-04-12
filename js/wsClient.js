@@ -91,14 +91,18 @@
 		if (window.WebSocket) {
 			this.socket = new WebSocket(this.url);
 			this.socket.onmessage = (event) => {
-				var msg = JSON.parse(event.data).data;
-				if(msg == 'INTERACTIVE_SIGNAL_START'){
+				var enc = new TextDecoder('utf-8');
+				event.data.arrayBuffer().then(buffer => {
+				  let data = JSON.parse(enc.decode(new Uint8Array(buffer))) || {};
+				  var msg = data.data
+				  if(msg == 'INTERACTIVE_SIGNAL_START'){
 					window.is = true;						
-				}else if(msg == 'INTERACTIVE_SIGNAL_STOP'){
+				  }else if(msg == 'INTERACTIVE_SIGNAL_STOP'){
 					window.is = false;	
-				}else{
+				  }else{
 					window.wsClient.panel.append(htmlEscape(msg))
 				}
+				})
 			};
 			this.socket.onopen = (event) => {
 				log.info("websocket ({}) open", this.url);
