@@ -155,6 +155,10 @@
                                                 <input type="checkbox" class="custom-control-input" id="recvClean" v-model="recvClean" :disabled="!connected">
                                                 <label class="custom-control-label" for="recvClean">不定位到最新行</label>
                                             </div>
+                                            <div class="custom-control custom-checkbox inline-flex mt-2">
+                                                <input type="checkbox" class="custom-control-input" id="showNotification" v-model="showNotification" :disabled="!connected" @change="openNotification">
+                                                <label class="custom-control-label" for="showNotification">开启通知</label>
+                                            </div>
 <!--                                            <div class="custom-control custom-checkbox inline-flex mt-2">-->
 <!--                                                <input type="checkbox" class="custom-control-input" id="recvDecode" v-model="recvDecode" :disabled="!connected">-->
 <!--                                                <label class="custom-control-label" for="recvDecode">收包JSON解码</label>-->

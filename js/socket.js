@@ -28,7 +28,9 @@ var Vm = new Vue({
         recvDecode: false,
         connected: false,
         recvPause: false,
-        raiseNum: 1000
+        raiseNum: 1000,
+        is: true,
+        showNotification: false
     },
     created: function created () {
         this.canUseH5WebSocket()
@@ -114,11 +116,25 @@ var Vm = new Vue({
                                 console.warn(msg);
                                 // if (_this.recvClean) _this.messageData = [];
                                 if (msg === 'INTERACTIVE_SIGNAL_START') {
-                                    window.is = true;
+                                    _this.is = true;
                                 } else if(msg === 'INTERACTIVE_SIGNAL_STOP'){
-                                    window.is = false;
+                                    _this.is = false;
                                 } else if(msg.includes("say:")) {
                                     _this.writeConsole('success', msg)
+                                } else if(msg.includes("joined room!")) {
+                                    // 检查浏览器是否支持Notification API
+                                    if (_this.showNotification) {
+                                        // 如果已经授权，或用户同意，则创建一个新的通知
+                                        var notification = new Notification('WebSocket在线测试', {
+                                            body: '你有一条测试内容' // 通知的正文
+                                        });
+                                        // 如果需要跳转的话-请把以下注释取消
+                                        // notification.onclick = () => {
+                                        //     window.focus();
+                                        // };
+                                        _this.writeAlert('info', '你有一条测试内容')
+                                    }
+                                    _this.writeNews(0, msg);
                                 } else {
                                     _this.writeNews(0, msg);
                                 }
@@ -223,6 +239,9 @@ var Vm = new Vue({
                 return;
             }
             try {
+                if (!_this.is) {
+                    data = '~ ' + data;
+                }
                 _this.instance.send(JSON.stringify({data: data}));
                 _this.writeNews(1, data);
                 if (_this.sendClean && typeof raw === 'object') _this.content = '';
@@ -247,6 +266,21 @@ var Vm = new Vue({
                 // 仅当未按下 Shift 时，触发提交逻辑
                 event.preventDefault(); // 阻止默认行为（如换行）
                 this.sendData(event);
+            }
+        },
+        openNotification() {
+            // 检查浏览器是否支持Notification API
+            if (window.Notification) {
+                // 请求权限，如果用户同意，则会返回 'granted'
+                Notification.requestPermission().then(permission => {
+                    if (permission === 'granted') {
+                        this.writeAlert('success', "通知权限开启成功");
+                    } else if (Notification.permission === "denied") {
+                        this.writeAlert('danger', "通知权限被拒绝，请在浏览器设置中手动开启。");
+                    }
+                });
+            } else {
+                this.writeAlert('danger', '你的浏览器不支持通知功能 请更换浏览器');
             }
         },
         call() {
